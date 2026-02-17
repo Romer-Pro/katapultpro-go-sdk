@@ -1,0 +1,80 @@
+# Release: on tag push v*.*.*, run tests, create GitHub Release, and attach
+# SBOM + checksums so the package can be installed with go install and consumed safely.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "v3/go.mod"
+
+      - name: Tidy
+        run: cd v3 && go mod tidy
+
+      - name: Build
+        run: go build ./v3/...
+
+      - name: Vet
+        run: go vet ./v3/...
+
+      - name: Test
+        run: go test -race ./v3/...
+
+  release:
+    name: Release
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "v3/go.mod"
+
+      - name: Generate SBOM (CycloneDX)
+        uses: anchore/sbom-action@v0.15.2
+        with:
+          path: ./v3
+          format: cyclonedx-json
+          output-file: sbom.cyclonedx.json
+          artifact-name: sbom
+
+      - name: Generate SBOM (SPDX)
+        uses: anchore/sbom-action@v0.15.2
+        with:
+          path: ./v3
+          format: spdx-json
+          output-file: sbom.spdx.json
+          artifact-name: sbom-spdx
+
+      - name: Create checksums for SBOMs
+        run: sha256sum sbom.cyclonedx.json sbom.spdx.json > checksums.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            sbom.cyclonedx.json
+            sbom.spdx.json
+            checksums.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

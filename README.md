@@ -8,9 +8,33 @@ Unofficial Go SDK for the [Katapult Pro](https://katapult.pro) **API v3**. Light
 
 ## Install (v3)
 
+**Latest version (tracking main):**
+
 ```bash
 go get github.com/romer-pro/katapultpro-go-sdk/v3
 ```
+
+**Specific release (recommended for production):**
+
+```bash
+# Replace v3.0.0 with the release tag (e.g. v3.1.0)
+go get github.com/romer-pro/katapultpro-go-sdk/v3@v3.0.0
+```
+
+Then in your code:
+
+```go
+import "github.com/romer-pro/katapultpro-go-sdk/v3"
+```
+
+## Releases and security
+
+Releases are published as [GitHub Releases](https://github.com/romer-pro/katapultpro-go-sdk/releases) when a version tag (e.g. `v3.0.0`) is pushed. Each release includes:
+
+- **SBOM (Software Bill of Materials)** in CycloneDX and SPDX format for dependency and supply-chain review.
+- **Checksums** for the SBOM files (SHA-256 in `checksums.txt`).
+
+Use a tagged version in `go get ...@vx.x.x` for reproducible builds and to verify artifacts from the release page if needed.
 
 ## Usage
 
@@ -121,6 +145,10 @@ The project uses [just](https://github.com/casey/just) for common tasks. Install
 | `just fmt` | Format code |
 | `just check` | Build, vet, and test |
 | `just ci` | Tidy, build, vet, test with race (CI). |
+
+## Contributing
+
+Contributions are welcome. All changes go through pull requests: tests must pass and a maintainer must approve. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full process and branch protection details.
 
 ## License
 

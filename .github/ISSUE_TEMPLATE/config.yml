@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://pkg.go.dev/github.com/romer-pro/katapultpro-go-sdk/v3
+    about: API reference and package docs
+  - name: Contributing
+    url: https://github.com/romer-pro/katapultpro-go-sdk/blob/main/CONTRIBUTING.md
+    about: How to contribute and open pull requests

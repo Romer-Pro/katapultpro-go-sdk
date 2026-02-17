@@ -1,0 +1,35 @@
+# CI: run tests and checks on every push to main and on every PR.
+# Branch protection can require this workflow to pass before merging.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "v3/go.mod"
+
+      - name: Tidy
+        run: cd v3 && go mod tidy
+
+      - name: Build
+        run: go build ./v3/...
+
+      - name: Vet
+        run: go vet ./v3/...
+
+      - name: Test
+        run: go test -race ./v3/...

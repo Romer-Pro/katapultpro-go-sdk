@@ -55,7 +55,7 @@ jobs:
           path: ./v3
           format: cyclonedx-json
           output-file: sbom.cyclonedx.json
-          artifact-name: sbom
+          upload-artifact: false
 
       - name: Generate SBOM (SPDX)
         uses: anchore/sbom-action@v0.15.2
@@ -63,7 +63,7 @@ jobs:
           path: ./v3
           format: spdx-json
           output-file: sbom.spdx.json
-          artifact-name: sbom-spdx
+          upload-artifact: false
 
       - name: Create checksums for SBOMs
         run: sha256sum sbom.cyclonedx.json sbom.spdx.json > checksums.txt

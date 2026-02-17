@@ -24,16 +24,16 @@ jobs:
           go-version-file: "v3/go.mod"
 
       - name: Tidy
-        run: cd v3 && go mod tidy
+        run: go -C v3 mod tidy
 
       - name: Build
-        run: go build ./v3/...
+        run: go build -C v3 ./...
 
       - name: Vet
-        run: go vet ./v3/...
+        run: go vet -C v3 ./...
 
       - name: Test
-        run: go test -race ./v3/...
+        run: go test -C v3 -race ./...
 
   release:
     name: Release

@@ -60,8 +60,17 @@ type (
 
 // Photos domain types (re-exported).
 type (
-	Photo                 = photos.Photo
-	AssociatePhotoRequest = photos.AssociatePhotoRequest
+	Photo                                 = photos.Photo
+	AssociatePhotoRequest                 = photos.AssociatePhotoRequest
+	PixelSelection                        = photos.PixelSelection
+	PhotoElement                          = photos.PhotoElement
+	CreatePhotoElementRequest             = photos.CreatePhotoElementRequest
+	UpdatePhotoElementRequest            = photos.UpdatePhotoElementRequest
+	UpdatePhotoElementOptions            = photos.UpdatePhotoElementOptions
+	PhotoCalibrationAnchor               = photos.PhotoCalibrationAnchor
+	CreatePhotoCalibrationAnchorRequest  = photos.CreatePhotoCalibrationAnchorRequest
+	UpdatePhotoCalibrationAnchorRequest  = photos.UpdatePhotoCalibrationAnchorRequest
+	UpdatePhotoCalibrationAnchorOptions  = photos.UpdatePhotoCalibrationAnchorOptions
 )
 
 // Traces domain types (re-exported).

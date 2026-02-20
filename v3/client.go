@@ -39,9 +39,13 @@ var _ Interface = (*Client)(nil)
 var _ request.Doer = (*Client)(nil)
 
 // NewClient returns a new Client for the Katapult Pro API.
-// apiKey is sent as a Bearer token on authenticated requests; it may be empty for public endpoints.
+// apiKey is sent as a Bearer token on all requests and is required.
 // Options (e.g. WithBaseURL, WithHTTPClient) customize the client behavior.
+// Returns ErrMissingAPIKey if apiKey is empty.
 func NewClient(apiKey string, opts ...ClientOption) (*Client, error) {
+	if apiKey == "" {
+		return nil, ErrMissingAPIKey
+	}
 	baseURL, _ := url.Parse(defaultBaseURL)
 	c := &Client{
 		baseURL:    baseURL,

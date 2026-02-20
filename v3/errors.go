@@ -1,6 +1,12 @@
 package katapultpro
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
+
+// ErrMissingAPIKey is returned when NewClient is called with an empty API key.
+var ErrMissingAPIKey = errors.New("katapultpro: API key is required")
 
 // APIError represents an error response from the Katapult Pro API (v3).
 // It is returned for non-2xx HTTP responses or when the response envelope has status "error".

@@ -2,13 +2,35 @@ package katapultpro_test
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"testing"
 	"time"
 
 	"github.com/romer-pro/katapultpro-go-sdk/v3"
 )
+
+func TestNewClient_MissingAPIKey(t *testing.T) {
+	_, err := katapultpro.NewClient("")
+	if err == nil {
+		t.Fatal("expected error for empty API key, got nil")
+	}
+	if !errors.Is(err, katapultpro.ErrMissingAPIKey) {
+		t.Fatalf("expected ErrMissingAPIKey, got %v", err)
+	}
+}
+
+func TestNewClient_WithAPIKey(t *testing.T) {
+	client, err := katapultpro.NewClient("test-api-key")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if client == nil {
+		t.Fatal("expected non-nil client")
+	}
+}
 
 func ExampleNewClient() {
 	client, err := katapultpro.NewClient("your-api-key")

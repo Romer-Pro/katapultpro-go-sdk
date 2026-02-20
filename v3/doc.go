@@ -14,9 +14,11 @@
 //
 // # Usage
 //
+// NewClient requires a valid API key; passing an empty string returns ErrMissingAPIKey.
+//
 //	client, err := katapultpro.NewClient("your-api-key")
 //	if err != nil {
-//	    log.Fatal(err)
+//	    log.Fatal(err) // e.g., ErrMissingAPIKey if API key is empty
 //	}
 //	ctx := context.Background()
 //

@@ -32,6 +32,29 @@ func TestNewClient_WithAPIKey(t *testing.T) {
 	}
 }
 
+func TestClient_APIKeyInQueryParam(t *testing.T) {
+	const testAPIKey = "my-secret-api-key"
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Verify API key is in query parameter, not header
+		if got := r.URL.Query().Get("api_key"); got != testAPIKey {
+			t.Errorf("expected api_key=%q in query, got %q", testAPIKey, got)
+		}
+		if auth := r.Header.Get("Authorization"); auth != "" {
+			t.Errorf("expected no Authorization header, got %q", auth)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"status":"success","data":[],"meta":{"token_count":9999,"last_refill_time":0}}`))
+	}))
+	defer srv.Close()
+
+	client, _ := katapultpro.NewClient(testAPIKey, katapultpro.WithBaseURL(srv.URL))
+	_, err := client.ListJobs(context.Background(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func ExampleNewClient() {
 	client, err := katapultpro.NewClient("your-api-key")
 	if err != nil {

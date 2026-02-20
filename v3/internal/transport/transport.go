@@ -17,7 +17,14 @@ func Do(ctx context.Context, method string, baseURL *url.URL, path string, query
 	path = strings.TrimPrefix(path, "/")
 	segments := strings.Split(path, "/")
 	u := baseURL.JoinPath(segments...)
-	if query != nil {
+	// Katapult Pro uses query parameter authentication: ?api_key=<key>
+	if query == nil {
+		query = url.Values{}
+	}
+	if apiKey != "" {
+		query.Set("api_key", apiKey)
+	}
+	if len(query) > 0 {
 		u.RawQuery = query.Encode()
 	}
 	req, err := http.NewRequestWithContext(ctx, method, u.String(), body)
@@ -30,9 +37,6 @@ func Do(ctx context.Context, method string, baseURL *url.URL, path string, query
 		req.Header.Set("Content-Type", "application/json")
 	}
 	req.Header.Set("Accept", "application/json")
-	if apiKey != "" {
-		req.Header.Set("Authorization", "Bearer "+apiKey)
-	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return 0, nil, fmt.Errorf("request: %w", err)

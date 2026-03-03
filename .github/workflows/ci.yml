@@ -13,6 +13,9 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: [v2, v3]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,16 +23,16 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: "v3/go.mod"
+          go-version-file: "${{ matrix.module }}/go.mod"
 
       - name: Tidy
-        run: go -C v3 mod tidy
+        run: go -C ${{ matrix.module }} mod tidy
 
       - name: Build
-        run: go build -C v3 ./...
+        run: go build -C ${{ matrix.module }} ./...
 
       - name: Vet
-        run: go vet -C v3 ./...
+        run: go vet -C ${{ matrix.module }} ./...
 
       - name: Test
-        run: go test -C v3 -race ./...
+        run: go test -C ${{ matrix.module }} -race ./...

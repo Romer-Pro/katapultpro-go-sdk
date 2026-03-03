@@ -21,6 +21,68 @@ func NewClient(do request.Doer, jobID string) *Client {
 	return &Client{do: do, jobID: jobID}
 }
 
+// Node returns a NodeScope for the given node, enabling drill-down operations.
+// Example: client.Job(jobID).Nodes().Node(nodeID).Get(ctx)
+func (c *Client) Node(nodeID string) *NodeScope {
+	return &NodeScope{do: c.do, jobID: c.jobID, nodeID: nodeID}
+}
+
+// NodeScope scopes operations to a single node. Use Nodes().Node(nodeID) to create one.
+type NodeScope struct {
+	do     request.Doer
+	jobID  string
+	nodeID string
+}
+
+// NodeID returns the scoped node ID.
+func (s *NodeScope) NodeID() string { return s.nodeID }
+
+// Get returns the node.
+func (s *NodeScope) Get(ctx context.Context) (*Node, error) {
+	path := "v3/jobs/" + s.jobID + "/nodes/" + s.nodeID
+	var node Node
+	if err := s.do.Do(ctx, http.MethodGet, path, nil, nil, &node); err != nil {
+		return nil, err
+	}
+	return &node, nil
+}
+
+// Update updates the node. Use opts.OnlyIfExists to avoid creating with the given id.
+func (s *NodeScope) Update(ctx context.Context, req *UpdateNodeRequest, opts *UpdateNodeOptions) (*Node, error) {
+	path := "v3/jobs/" + s.jobID + "/nodes/" + s.nodeID
+	var q url.Values
+	if opts != nil && opts.OnlyIfExists {
+		q = url.Values{}
+		q.Set("onlyIfExists", "true")
+	}
+	var node Node
+	if err := s.do.Do(ctx, http.MethodPost, path, q, req, &node); err != nil {
+		return nil, err
+	}
+	return &node, nil
+}
+
+// UploadPhoto uploads a photo (image/jpeg) and associates it to the node.
+func (s *NodeScope) UploadPhoto(ctx context.Context, imageData io.Reader, opts *UploadNodePhotoOptions) (*photos.Photo, error) {
+	path := "v3/jobs/" + s.jobID + "/nodes/" + s.nodeID + "/photos"
+	var q url.Values
+	if opts != nil && opts.AssociationValue.IsValid() {
+		q = url.Values{}
+		q.Set("association_value", opts.AssociationValue.String())
+	}
+	var photo photos.Photo
+	if err := s.do.DoWithBody(ctx, http.MethodPost, path, q, "image/jpeg", imageData, &photo); err != nil {
+		return nil, err
+	}
+	return &photo, nil
+}
+
+// Delete deletes the node.
+func (s *NodeScope) Delete(ctx context.Context) error {
+	path := "v3/jobs/" + s.jobID + "/nodes/" + s.nodeID
+	return s.do.Do(ctx, http.MethodDelete, path, nil, nil, nil)
+}
+
 // List returns all nodes in the job (v3).
 func (c *Client) List(ctx context.Context) ([]Node, error) {
 	path := "v3/jobs/" + c.jobID + "/nodes"

@@ -16,7 +16,7 @@ func TestListTraces(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"status":"success","data":[{"id":"t1","trace_type":"line"}],"meta":{"token_count":9999,"last_refill_time":0}}`))
+		_, _ = w.Write([]byte(`{"status":"success","data":[{"id":"t1","_trace_type":"line"}],"meta":{"token_count":9999,"last_refill_time":0}}`))
 	}))
 	defer srv.Close()
 
@@ -37,7 +37,7 @@ func TestGetTrace(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"status":"success","data":{"id":"t1","trace_type":"line"},"meta":{"token_count":9999,"last_refill_time":0}}`))
+		_, _ = w.Write([]byte(`{"status":"success","data":{"id":"t1","_trace_type":"line"},"meta":{"token_count":9999,"last_refill_time":0}}`))
 	}))
 	defer srv.Close()
 
@@ -58,7 +58,7 @@ func TestCreateTrace(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"status":"success","data":{"id":"new-trace","trace_type":"line"},"meta":{"token_count":9999,"last_refill_time":0}}`))
+		_, _ = w.Write([]byte(`{"status":"success","data":{"id":"new-trace","_trace_type":"line"},"meta":{"token_count":9999,"last_refill_time":0}}`))
 	}))
 	defer srv.Close()
 

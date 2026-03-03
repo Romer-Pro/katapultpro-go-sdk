@@ -7,11 +7,14 @@ import (
 
 // Node represents a node in a job (v3).
 type Node struct {
-	ID             string                 `json:"id,omitempty"`
-	Latitude       float64                `json:"latitude,omitempty"`
-	Longitude      float64                `json:"longitude,omitempty"`
-	Attributes     shared.EntityAttributeList `json:"attributes,omitempty"`
-	AddAttributes  map[string]interface{} `json:"add_attributes,omitempty"`
+	ID            string                     `json:"id,omitempty"`
+	Latitude      float64                    `json:"latitude,omitempty"`
+	Longitude     float64                    `json:"longitude,omitempty"`
+	Button        string                     `json:"button,omitempty"` // e.g., "aerial"
+	Created       *shared.CreatedInfo        `json:"_created,omitempty"`
+	Attributes    shared.EntityAttributeList `json:"attributes,omitempty"`
+	AddAttributes map[string]interface{}     `json:"add_attributes,omitempty"`
+	Photos        shared.PhotoAssociationMap `json:"photos,omitempty"`
 }
 
 // CreateNodeRequest is the body for POST /v3/jobs/:job_id/nodes.

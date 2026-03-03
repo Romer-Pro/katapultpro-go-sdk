@@ -7,12 +7,16 @@ import (
 
 // Section represents a section on a connection (v3).
 type Section struct {
-	Key           string                 `json:"key,omitempty"`
-	Latitude      float64                `json:"latitude,omitempty"`
-	Longitude     float64                `json:"longitude,omitempty"`
-	MakeMidpoint  bool                   `json:"make_midpoint,omitempty"`
-	Attributes    shared.EntityAttributeList `json:"attributes,omitempty"`
-	AddAttributes map[string]interface{} `json:"add_attributes,omitempty"`
+	ID              string                     `json:"id,omitempty"`  // Returned in list/get responses
+	Key             string                     `json:"key,omitempty"` // Used in some contexts
+	Latitude        float64                    `json:"latitude,omitempty"`
+	Longitude       float64                    `json:"longitude,omitempty"`
+	MakeMidpoint    bool                       `json:"make_midpoint,omitempty"`
+	Created         *shared.CreatedInfo        `json:"_created,omitempty"`
+	Attributes      shared.EntityAttributeList `json:"attributes,omitempty"`
+	MultiAttributes shared.EntityAttributeList `json:"multi_attributes,omitempty"` // Alternative attribute format in responses
+	AddAttributes   map[string]interface{}     `json:"add_attributes,omitempty"`
+	Photos          shared.PhotoAssociationMap `json:"photos,omitempty"`
 }
 
 // CreateSectionRequest is the body for POST /v3/jobs/:job_id/connections/:connection_id/sections.

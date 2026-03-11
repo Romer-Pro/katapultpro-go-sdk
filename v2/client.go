@@ -9,7 +9,7 @@ import (
 	"net/url"
 )
 
-const defaultBaseURL = "https://katapultpro.com/api"
+const defaultBaseURL = "https://katapultpro.com/api/"
 
 // Client is the Katapult Pro API v2 client.
 // A Client is safe for concurrent use by multiple goroutines.

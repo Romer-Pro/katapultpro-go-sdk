@@ -14,6 +14,7 @@ type Connection struct {
 	Attributes    shared.EntityAttributeList `json:"attributes,omitempty"`
 	AddAttributes map[string]interface{}     `json:"add_attributes,omitempty"`
 	Sections      map[string]EmbeddedSection `json:"sections,omitempty"` // Sections embedded in connection response
+	Photos        shared.PhotoAssociationMap `json:"photos,omitempty"`   // Photos associated with the connection
 }
 
 // EmbeddedSection represents a section embedded within a connection response.

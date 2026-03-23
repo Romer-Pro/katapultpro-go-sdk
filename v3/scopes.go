@@ -6,6 +6,7 @@ import (
 	"github.com/romer-pro/katapultpro-go-sdk/v3/connections"
 	"github.com/romer-pro/katapultpro-go-sdk/v3/nodes"
 	"github.com/romer-pro/katapultpro-go-sdk/v3/photos"
+	"github.com/romer-pro/katapultpro-go-sdk/v3/sections"
 	"github.com/romer-pro/katapultpro-go-sdk/v3/traces"
 )
 
@@ -63,4 +64,11 @@ func (s *JobScope) Photos() *photos.Client {
 // Traces returns a traces client for this job.
 func (s *JobScope) Traces() *traces.Client {
 	return traces.NewClient(s.c, s.jobID)
+}
+
+// Sections returns a job-scoped sections client for direct section access without connectionID.
+// Use this when you have a sectionID but not the connectionID.
+// For connection-scoped section operations, use Connections().Connection(connID).Sections() instead.
+func (s *JobScope) Sections() *sections.JobClient {
+	return sections.NewJobClient(s.c, s.jobID)
 }

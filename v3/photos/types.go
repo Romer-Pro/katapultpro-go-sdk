@@ -34,12 +34,19 @@ type Photo struct {
 }
 
 // PhotofirstData contains measurement and calibration data for a photo.
+//
+// PoleHeight values arrive in two shapes from the Katapult Pro API depending
+// on workflow state: a boolean marker (`true`) flagged on a pole-height entry,
+// or a measurement object (similar in shape to PoleTopMeasurement) once a
+// height has been recorded. Typing the value as `any` keeps the photos list
+// endpoint resilient to both shapes — narrowing here previously caused the
+// entire response to fail decode when a single photo carried the object form.
 type PhotofirstData struct {
-	Editors           map[string]int64               `json:"_editors,omitempty"`           // Map of user ID to timestamp
-	AnchorCalibration map[string]AnchorCalibration   `json:"anchor_calibration,omitempty"` // Keyed by anchor ID
-	PoleHeight        map[string]bool                `json:"poleHeight,omitempty"`
-	PoleTop           map[string]PoleTopMeasurement  `json:"pole_top,omitempty"`
-	Wire              map[string]WireMeasurement     `json:"wire,omitempty"`
+	Editors           map[string]int64              `json:"_editors,omitempty"`           // Map of user ID to timestamp
+	AnchorCalibration map[string]AnchorCalibration  `json:"anchor_calibration,omitempty"` // Keyed by anchor ID
+	PoleHeight        map[string]any                `json:"poleHeight,omitempty"`         // Values: bool marker or measurement object
+	PoleTop           map[string]PoleTopMeasurement `json:"pole_top,omitempty"`
+	Wire              map[string]WireMeasurement    `json:"wire,omitempty"`
 }
 
 // AnchorCalibration represents a calibration anchor measurement.
